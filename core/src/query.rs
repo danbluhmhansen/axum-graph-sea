@@ -1,10 +1,10 @@
 use ::entity::{note, note::Entity as Note};
-use sea_orm::*;
+use sea_orm::{prelude::Uuid, *};
 
 pub struct Query;
 
 impl Query {
-    pub async fn find_note_by_id(db: &DbConn, id: i32) -> Result<Option<note::Model>, DbErr> {
+    pub async fn find_note_by_id(db: &DbConn, id: Uuid) -> Result<Option<note::Model>, DbErr> {
         Note::find_by_id(id).one(db).await
     }
 

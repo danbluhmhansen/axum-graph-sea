@@ -1,6 +1,6 @@
 use async_graphql::{Context, Object, Result};
+use axum_graph_sea_core::{sea_orm::prelude::Uuid, Query};
 use entity::{async_graphql, note};
-use axum_graph_sea_core::Query;
 
 use crate::db::Database;
 
@@ -18,7 +18,7 @@ impl NoteQuery {
             .map_err(|e| e.to_string())?)
     }
 
-    async fn get_note_by_id(&self, ctx: &Context<'_>, id: i32) -> Result<Option<note::Model>> {
+    async fn get_note_by_id(&self, ctx: &Context<'_>, id: Uuid) -> Result<Option<note::Model>> {
         let db = ctx.data::<Database>().unwrap();
         let conn = db.get_connection();
 

@@ -1,7 +1,8 @@
 use async_graphql::{Context, Object, Result};
+use axum_graph_sea_core::sea_orm::prelude::Uuid;
+use axum_graph_sea_core::Mutation;
 use entity::async_graphql::{self, InputObject, SimpleObject};
 use entity::note;
-use axum_graph_sea_core::Mutation;
 
 use crate::db::Database;
 
@@ -17,7 +18,7 @@ pub struct CreateNoteInput {
 impl CreateNoteInput {
     fn into_model_with_arbitrary_id(self) -> note::Model {
         note::Model {
-            id: 0,
+            id: Uuid::new_v4(),
             title: self.title,
             text: self.text,
         }
@@ -46,7 +47,7 @@ impl NoteMutation {
         Ok(Mutation::create_note(conn, input.into_model_with_arbitrary_id()).await?)
     }
 
-    pub async fn delete_note(&self, ctx: &Context<'_>, id: i32) -> Result<DeleteResult> {
+    pub async fn delete_note(&self, ctx: &Context<'_>, id: Uuid) -> Result<DeleteResult> {
         let db = ctx.data::<Database>().unwrap();
         let conn = db.get_connection();
 
